@@ -17,5 +17,15 @@ API.interceptors.request.use((config) => {
 	// Do something with request error
 	return Promise.reject(error);
 });
-
+API.interceptors.response.use((response) => {
+    return response;
+}, (error) => {
+    if (error.response.status === 401) { // Unauthorized error (token expired)
+        // Clear the expired token from local storage
+        localStorage.removeItem('access_token');
+        // Redirect to sign-in page
+        navigate('/signin'); // Adjust the route as per your application
+    }
+    return Promise.reject(error);
+});
 export default API;
